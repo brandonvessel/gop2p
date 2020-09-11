@@ -1,4 +1,4 @@
-# GoP2P
+# P2PGo
 
 gop2p is a Golang library for enabling dead-simple UDP-based peer-to-peer communication between software clients. The objective is to be able to remotely control a variety of nodes by issuing commands that are RSA-signed. The peers maintain the public key to the private key that only the client has.
 
