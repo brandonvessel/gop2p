@@ -16,15 +16,15 @@ After generating public and private RSA keys, put them in the cryptotext.go file
 
 After putting the keys in the correct location, run the client with:
 ```
-./client "IP ADDRESS OF PEER HERE"
+./client <IP ADDRESS OF PEER HERE>
 ```
 Run the initial peer like this:
 ```
-./peer "SELF IP" 0
+./peer <SELF IP> 0
 ```
 And run any new peers like this:
 ```
-./peer "SELF IP" 1 "ANY PEER IP THAT IS CURRENTLY RUNNING"
+./peer <SELF IP> 1 <ANY PEER IP THAT IS CURRENTLY RUNNING>
 ```
 
 ## Peer Discovery
