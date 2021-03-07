@@ -31,7 +31,6 @@ SOFTWARE.
 // standard imports
 import (
 	"fmt"
-	"net"
 )
 
 func main() {
@@ -40,11 +39,6 @@ func main() {
 
 	var input string
 	fmt.Scanln(&input)
-}
-
-// portGenerator returns a port based on the IP of an address
-func portGenerator(addr *net.UDPAddr) int {
-	return 777
 }
 
 // confirmMessage uses cryptography to ensure only signed commands from a trusted source are processed

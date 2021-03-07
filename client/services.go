@@ -73,7 +73,7 @@ func initParseArguments() {
 	fmt.Println("Now running " + myProgramName + " on " + runtime.GOOS + "-" + runtime.GOARCH)
 
 	// 1 ip address of current machine
-	myAddress := net.UDPAddr{IP: net.ParseIP(os.Args[1]), Port: int(portGenerator(&net.UDPAddr{IP: net.ParseIP(os.Args[1])}))}
+	myAddress := net.UDPAddr{IP: net.ParseIP(os.Args[1]), Port: listeningPort}
 	fmt.Println("My address: " + net.IP.String(myAddress.IP))
 
 	// 2 whether or not a parent exists
@@ -84,7 +84,7 @@ func initParseArguments() {
 		peerListLock.Lock()
 		peerList[0] = Peer{expirationTimer: expirationDefault}
 		peerList[0].addr.IP = net.ParseIP(os.Args[3])
-		peerList[0].addr.Port = int(portGenerator(&net.UDPAddr{IP: net.ParseIP(os.Args[3])}))
+		peerList[0].addr.Port = listeningPort
 
 		// send announce to peer
 		sendAnnounce(&peerList[0].addr)
@@ -164,7 +164,7 @@ func serviceUpdater() {
 // serviceListener is a goroutine for listening on the UDP connection and sending the received data to the channel as fast as possible
 func serviceListener(bufchan chan UDPData) {
 	// setup udp listening port for messages
-	ServerConn, err := net.ListenUDP("udp", &net.UDPAddr{IP: []byte{0, 0, 0, 0}, Port: int(portGenerator(&net.UDPAddr{IP: net.ParseIP(os.Args[1])})), Zone: ""})
+	ServerConn, err := net.ListenUDP("udp", &net.UDPAddr{IP: []byte{0, 0, 0, 0}, Port: listeningPort, Zone: ""})
 	defer fmt.Println(err)
 
 	// create buffer for message recieving

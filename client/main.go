@@ -30,19 +30,49 @@ SOFTWARE.
 
 // standard imports
 import (
+	"flag"
+	"fmt"
 	"net"
 	"os"
 )
 
-func main() {
-	if os.Args[2] == "2" {
-		runClient(net.UDPAddr{IP: net.ParseIP(os.Args[1]), Port: portGenerator(&net.UDPAddr{IP: net.ParseIP(os.Args[1])})})
-	}
-}
+// listening port for client
+var listeningPort int
 
-// portGenerator returns a port based on the IP of an address
-func portGenerator(addr *net.UDPAddr) int {
-	return 777
+func main() {
+	// arguments
+	// listening port number integer
+	flag.IntVar(&listeningPort, "p", 0, "Listening port")
+
+	// IP string of peer
+	var parentIP string
+
+	flag.StringVar(&parentIP, "b", "", "IP of peer node")
+
+	// parse flags
+	flag.Parse()
+
+	// check if peer IP exists
+	if parentIP == "" {
+		// print message
+		fmt.Println("Peer IP must be specified")
+		
+		// print usage
+		flag.Usage()
+		os.Exit(1)
+	}
+
+	// check if port exists
+	if listeningPort == 0 {
+		// print message
+		fmt.Println("Port must be specified")
+		
+		// print usage
+		flag.Usage()
+		os.Exit(1)
+	}
+
+	runClient(net.UDPAddr{IP: net.ParseIP(parentIP), Port: listeningPort})
 }
 
 // confirmMessage uses cryptography to ensure only signed commands from a trusted source are processed

@@ -14,22 +14,24 @@ After generating public and private RSA keys, put them in the cryptotext.go file
 
 ## Usage
 
-After putting the keys in the correct location, run the client with:
+After putting the keys in the correct location, build the client and peer.
 
-```
-./client <IP ADDRESS OF PEER HERE>
+Run the client with:
+
+```bash
+./p2pclient <IP ADDRESS OF PEER HERE>
 ```
 
 Run the initial peer like this:
 
-```
-./peer -p <port>
+```bash
+./p2ppeer -p <port>
 ```
 
 And run any new peers like this:
 
-```
-./peer -p <port> -b <ANY OTHER PEER IP>
+```bash
+./p2ppeer -p <port> -b <ANY OTHER PEER IP>
 ```
 
 ## Peer Discovery

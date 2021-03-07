@@ -129,11 +129,8 @@ func relayCommand(buf []byte) {
 /// Processing functions
 // processPing send a pong to the addr that sent the ping
 func processPing(addr *net.UDPAddr) {
-	// get addr value from pointer
-	address := *addr
-
 	// update addr.Port to match the port for that IP
-	addr.Port = int(portGenerator(&address))
+	addr.Port = listeningPort
 
 	// send pong to the addr that sent the ping
 	sendPong(addr)
@@ -193,7 +190,7 @@ func processAnnounce(addr *net.UDPAddr) {
 	addPeer(Peer{addr: address, expirationTimer: expirationDefault})
 
 	// send announce back
-	address.Port = portGenerator(&address)
+	address.Port = listeningPort
 	sendAnnounce(&address)
 }
 

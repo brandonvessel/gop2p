@@ -55,7 +55,7 @@ func addPeer(peer Peer) {
 		// if peer IS dead
 		if peerList[i].expirationTimer == 0 {
 			// ensure proper port by generating again
-			peer.addr.Port = portGenerator(&peer.addr)
+			peer.addr.Port = listeningPort
 
 			// ensure expiration timer is reset
 			peer.expirationTimer = expirationDefault
