@@ -1,9 +1,9 @@
 package main
 
 /*
-	Project: p2pgo
+	Project: gop2p
 	Author : Brandon Vessel
-	Source code : github.com/brandonvessel/p2pgo
+	Source code : github.com/brandonvessel/gop2p
 
 MIT License
 
@@ -29,12 +29,16 @@ SOFTWARE.
 */
 
 import (
+	"flag"
 	"fmt"
 	"net"
 	"os"
 	"runtime"
 	"time"
 )
+
+// argument variables
+var listeningPort int
 
 func initP2P() {
 	// initialize peerList
@@ -72,19 +76,34 @@ func initParseArguments() {
 	var myProgramName string = os.Args[0]
 	fmt.Println("Now running " + myProgramName + " on " + runtime.GOOS + "-" + runtime.GOARCH)
 
-	// 1 ip address of current machine
-	myAddress := net.UDPAddr{IP: net.ParseIP(os.Args[1]), Port: int(portGenerator(&net.UDPAddr{IP: net.ParseIP(os.Args[1])}))}
-	fmt.Println("My address: " + net.IP.String(myAddress.IP))
+	// listening port number integer
+	flag.IntVar(&listeningPort, "p", 0, "")
 
-	// 2 whether or not a parent exists
+	// IP string of parent (bootstrap)
+	var parentIP string
 
-	// 3 ip address of parent
-	if os.Args[2] == "1" {
+	flag.StringVar(&parentIP, "b", "", "IP of bootstrap node (Default: None)")
+
+	// parse flags
+	flag.Parse()
+
+	// check if port exists
+	if listeningPort == 0 {
+		// print message
+		fmt.Println("Port must be specified")
+		
+		// print usage
+		flag.Usage()
+		os.Exit(1)
+	}
+
+	// process parent IP (if it exists)
+	if parentIP != "" {
 		// add peer to peerList
 		peerListLock.Lock()
 		peerList[0] = Peer{expirationTimer: expirationDefault}
-		peerList[0].addr.IP = net.ParseIP(os.Args[3])
-		peerList[0].addr.Port = int(portGenerator(&net.UDPAddr{IP: net.ParseIP(os.Args[3])}))
+		peerList[0].addr.IP = net.ParseIP(parentIP)
+		peerList[0].addr.Port = listeningPort
 
 		// send announce to peer
 		sendAnnounce(&peerList[0].addr)
@@ -164,7 +183,7 @@ func serviceUpdater() {
 // serviceListener is a goroutine for listening on the UDP connection and sending the received data to the channel as fast as possible
 func serviceListener(bufchan chan UDPData) {
 	// setup udp listening port for messages
-	ServerConn, err := net.ListenUDP("udp", &net.UDPAddr{IP: []byte{0, 0, 0, 0}, Port: int(portGenerator(&net.UDPAddr{IP: net.ParseIP(os.Args[1])})), Zone: ""})
+	ServerConn, err := net.ListenUDP("udp", &net.UDPAddr{IP: []byte{0, 0, 0, 0}, Port: listeningPort, Zone: ""})
 	defer fmt.Println(err)
 
 	// create buffer for message recieving

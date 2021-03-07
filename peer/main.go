@@ -1,9 +1,9 @@
 package main
 
 /*
-	Project: p2pgo
+	Project: gop2p
 	Author : Brandon Vessel
-	Source code : github.com/brandonvessel/p2pgo
+	Source code : github.com/brandonvessel/gop2p
 
 MIT License
 
