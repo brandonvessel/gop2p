@@ -77,7 +77,7 @@ func initParseArguments() {
 	fmt.Println("Now running " + myProgramName + " on " + runtime.GOOS + "-" + runtime.GOARCH)
 
 	// listening port number integer
-	flag.IntVar(&listeningPort, "p", 0, "")
+	flag.IntVar(&listeningPort, "p", 0, "Listening port")
 
 	// IP string of parent (bootstrap)
 	var parentIP string

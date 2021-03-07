@@ -10,3 +10,5 @@ openssl rsa -in private.pem -out private-pkcs1.pem
 cat private-pkcs1.pem
 echo "\n\n"
 cat public.pem
+
+echo "make sure the \"peer\" does not have the private key. only the client is supposed to have it"
