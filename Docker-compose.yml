@@ -1,0 +1,31 @@
+version: "3"
+services:
+
+  app1:
+    container_name: peer1
+    build: ./peer
+    networks:
+      - network1
+    tty: true
+
+  app2:
+    container_name: peer2
+    build: ./peer
+    networks: 
+      - network1
+    tty: true
+  
+  app3:
+    container_name: client
+    build: ./client
+    networks:
+      - network1
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t
+  
+networks:
+  network1:
+    internal: true
+    ipam:
+      config: 
+        - subnet: 10.10.10.0/24
