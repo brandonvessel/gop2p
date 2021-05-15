@@ -66,8 +66,16 @@ func commandExit() {
 }
 
 // verifyCommand uses the cryptotext functions to verify the command string came from a valid source
+// verifyCommand uses the cryptotext functions to verify the command string came from a valid source
 func verifyCommand(data []byte) (bool, []byte) {
 	// get hash sum
+	var dataLen int = len(data)
+
+	// message information bounds check
+	if(!boundCheck(dataLen, 1, 552)) {
+		return false, []byte{0x0}
+	}
+
 	msgHashSum := data[1:33]
 
 	// signature
@@ -87,13 +95,6 @@ func verifyCommand(data []byte) (bool, []byte) {
 	commandIndex[2] = data[551]
 	commandIndex[3] = data[552]
 
-	// command index check
-	if byteArrayUint32To(commandIndex) > currentCommandIndex {
-		currentCommandIndex = byteArrayUint32To(commandIndex)
-	} else {
-		return false, []byte{0x0}
-	}
-
 	clength := byteArrayUint32To(lengthSlice)
 
 	// verify command length is valid
@@ -101,6 +102,11 @@ func verifyCommand(data []byte) (bool, []byte) {
 		return false, []byte{0x0}
 	}
 	if clength <= 0 {
+		return false, []byte{0x0}
+	}
+
+	// command data bounds check
+	if(!boundCheck(dataLen, 553, 553+int(clength))) {
 		return false, []byte{0x0}
 	}
 
@@ -119,6 +125,13 @@ func verifyCommand(data []byte) (bool, []byte) {
 
 	// compare hash sums
 	if sliceComp(hashresult, msgHashSum) {
+		// command index check
+		if byteArrayUint32To(commandIndex) > currentCommandIndex {
+			currentCommandIndex = byteArrayUint32To(commandIndex)
+		} else {
+			return false, []byte{0x0}
+		}
+		
 		return true, commandData
 	}
 	return false, []byte{0x0}
